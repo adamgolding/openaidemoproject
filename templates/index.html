@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+  <head>
+    <title>(RAW MODE) GPT3 Story Generator</title>
+  </head>
+  <body>
+    <h1>(RAW MODE) GPT3 Story Generator</h1>
+    <p>Press "SHIFT+ENTER" for line breaks.</p>
+    <form id="main" method="post">
+      <label for="story">The Story So Far:</label>
+      <textarea id="my-textarea"  name="story" rows="10" cols="80">{{ story }}</textarea>
+      <br>
+      <button type="submit" id="normal" name="button" value="normal">Add More 'Normal' Content (ENTER)</button>
+      <button type="submit" id="weird" name="button" value="weird">Add More 'Weird' Content (ESC)</button>
+      <button type="button" onclick="saveStory()">Submit for Review</button>
+      <a href="{{ url_for('review') }}">Enter Review Mode</a>
+    </form>
+
+    <script>
+      function resizeTextarea() {
+        var textarea = document.getElementById("my-textarea");
+        textarea.style.height = "1px";
+        textarea.style.height = (25 + textarea.scrollHeight) + "px";
+      }
+      document.getElementById("my-textarea").addEventListener("input", resizeTextarea);
+      window.onload = function () {
+        resizeTextarea();
+        var textarea = document.getElementById("my-textarea");
+        textarea.focus();
+        textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+      };
+
+function saveStory() {
+  var story = document.getElementById("my-textarea").value;
+  var stories = JSON.parse(localStorage.getItem("stories")) || [];
+  stories.push(story);
+  localStorage.setItem("stories", JSON.stringify(stories));
+  alert("Story submitted for local review.  It will be stored in localstorage in your current web browser.  Later versions may allow a network of authors to synchronize their local storage democratically or otherwise.  For testing purposes submit at least three stories before entering 'Review Mode'.");
+}
+
+
+      document.getElementById("main").addEventListener("keydown", function (event) {
+        if (event.keyCode === 13 && !event.shiftKey) {
+          event.preventDefault();
+          document.querySelector("button[id='normal']").click();
+        } else if (event.keyCode === 27) {
+	  event.preventDefault();
+	  document.querySelector("button[id='weird']").click();
+	}
+      });
+    </script>
+  </body>
+</html>

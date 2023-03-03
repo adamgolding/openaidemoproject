@@ -1,0 +1,122 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Story Review (Solitaire Mode)</title>
+    <style>
+      .story-card {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 10px;
+        border: 1px solid black;
+        margin-right: 10px;
+        width: 45%;
+      }
+      .story-card p {
+        margin: 0;
+      }
+      .story-card button {
+        margin-top: 10px;
+      }
+      #stories {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Story Review (Solitaire Mode)</h1>
+    <p  style="font-size:10px">May be extended to a "Story Review DAO" on the model of the "Software Review DAO" outlined in <a href="https://deliverypdf.ssrn.com/delivery.php?ID=856093125087082082029109092091003100060006063087051074127087021094112101004006078108038021018041122035062067126108103070089086049045093023049078121102005065084126010042049117091121084099102006005123030022027017002097114082076083011109080030073110085&EXT=pdf&INDEX=TRUE">this 2021 paper</a>. Simpy go back in your browser to return to story generation mode.
+    <div id="stories">
+
+	
+
+    </div>
+
+    <script>
+      let story1, story2;
+      // Get stories from local storage
+      let stories = JSON.parse(localStorage.getItem('stories')) || [];
+
+      // Display stories
+      displayStories();
+
+      // Set up event listener for button clicks using event delegation
+      document.getElementById("stories").addEventListener("click", function(event) {
+        if (event.target.matches("#btn-a-better")) {
+          updateRanks(stories[stories.indexOf(story1)], stories[stories.indexOf(story2)]);
+          displayStories();
+        } else if (event.target.matches("#btn-b-better")) {
+          updateRanks(stories[stories.indexOf(story2)], stories[stories.indexOf(story1)]);
+          displayStories();
+        } else if (event.target.matches("#delete")) {
+	let i = stories.indexOf(story2);
+	stories.splice(i,i);
+	console.log("spliced");
+	} else if (event.target.matches("#submit")) {
+		URIStory = encodeURIComponent(story1);
+		window.location.href = "mailto:user@example.com?subject=TOP STORY SO FAR&body=" + URIStory;
+
+	}
+      });
+
+      function updateRanks(winner, loser) {
+
+        console.log("winner: " + winner);
+
+        if(stories.indexOf(winner)!=0){
+          stories[stories.indexOf(winner)] = loser;
+          stories[0]=winner;
+        }
+        localStorage.setItem('stories', JSON.stringify(stories));
+        console.log('updated ranks');
+      }
+
+      function displayStories() {
+        // Choose which stories to compare
+
+        if (stories.length == 0) {
+          // If no stories, compare two random stories
+          story1, story2 = "NO STORY TO DISPLAY, PRESS BACK TO RETURN TO STORY GENERATOR MODE";
+        } else {
+          // Compare top story to a random story
+          story1 = stories[0];
+          story2 = stories[Math.floor(Math.random() * stories.length)]; //too eliminate self-comparison
+        }
+
+        // Create story cards
+        let card1 = createStoryCard(story1, "TOP STORY SO FAR");
+        let card2 = createStoryCard(story2, "CONTENDER STORY");
+
+        // Add story cards to DOM
+        let storiesDiv = document.getElementById("stories");
+        storiesDiv.innerHTML = "";
+        storiesDiv.appendChild(card1);
+        storiesDiv.appendChild(card2);
+	let buttons = document.createElement("div");
+	buttons.innerHTML = `
+  	<button id="btn-a-better">RANDOMIZE CONTENDER (F5)</button>
+	<button id="btn-b-better">SWAP TOP STORY WITH CONTENDER</button>
+	<button id="delete">DELETE CONTENDER</button>
+	<button id="submit" type="submit">EMAIL TOP STORY SO FAR FOR EXTERNAL REVIEW</button>
+	`;
+	storiesDiv.appendChild(buttons);
+      }
+
+      function createStoryCard(story, title) {
+        let card = document.createElement("div");
+        card.classList.add("story-card");
+        card.innerHTML = `
+          <p>${title}</p>
+          <p>${story}</p>
+      
+        `;
+        return card;
+      }
+    </script>
+	
+  </body>
+</html>
