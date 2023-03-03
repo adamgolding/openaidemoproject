@@ -1,0 +1,36 @@
+Hi Russell!  Attached is the new version for the demo tomorrow!  Just put your API key in app.py :-)
+
+This 'story generator' isn't really limited to stories, but the basic idea is you press ENTER for 'normal' text and ESC to 'escape' the normal bounds of narrative.  The most basic 'result' here is that it's cheaper to be weird: the 'weird' button uses the cheaper, faster ada model, although it may lead to more iterations as the user backspaces and re-generates.  Normal mode also uses the default settings for davinci.  Weird mode, which you can edit in app.py, is weird enough on its own just being the ada model.  I have commented out other ways of making it weird, such as temperature=2 or fequency_penalty=2.0 as they are unneessary, and make this less of a controlled experiment -- as it stands it is a raw-mode head-to-head comparison of the davinci and ada models for text completion, with a second mode, called 'REVIEW MODE' for comparing and reviewing stories, and submitting them to an external reviewer.
+
+This setup implicitly follows the 'generate-and-test' paraidgm common to computer science and evolution, including psychological theories of creativity in terms of (darwinian OR lamarckian) evolution.
+
+I'm not too concerned about the quality of the generated text as I assume we will be swapping in GPT4 APIs very soon.
+
+Cheers,
+Adam
+
+
+
+
+DETAILED DEVELOPMENT NOTES:
+
+Starting with the story generator concept I sent you for version 1, I got the idea of making a 'story reiew DAO' on the model of the 'software review DAO' defined in this paper I always send to people with a few others:
+
+https://deliverypdf.ssrn.com/delivery.php?ID=856093125087082082029109092091003100060006063087051074127087021094112101004006078108038021018041122035062067126108103070089086049045093023049078121102005065084126010042049117091121084099102006005123030022027017002097114082076083011109080030073110085&EXT=pdf&INDEX=TRUE
+
+For version 2 I have not implemented the DAO part, but have implemented the REVIEW part in 'solitaire mode' (one user, using a local file -- the only use of the internet is for API calls to generate text (optional) and for emailing the final story to a recipient (optional).  Using a model like git annex the story store could be synced between members of a review DAO without using the internet.  This could be relevant for high-stakes privacy where the generated story is public domain but the profit comes in deriving the story first and being first-to-market with the production -- for this reason, some production studios may wish to keep all 'plot syncs' offline so that the major data clouds can have no chance of reading/decrypting the store and 'front-running' them by being the first to market with a film based on a novel plot that is not their property due to API Licenses stipulating that they do not own the content etc -- there was recently a case about this covered on slashdot:
+
+https://yro.slashdot.org/story/23/02/22/2222254/ai-created-images-lose-us-copyrights-in-test-for-new-technology?fbclid=IwAR1Ap4jP3cQPzOqJ9gNXVLkdM4Pf_Grpk3yWbWI0Y7nSUO8paCleIhJoW_o
+
+nb. deletion (of text in the story box, and entire stories) is encouraged -- using what survives deletion as the first fitness function for the creative process means the database will be much smaller and also hence more private, but this means when extended to a DAO it will NOT technically use what is called a 'blockchain' since the delete operation means the system would not be immutable -- alternatively this could be changed to an immutable model by flagging stories as 'archived' or 'out of the running' for voting.
+
+
+POSSIBLE NEXT STEPS FOR THIS APP:
+
+- DELETE FUNCTION NEEDS MORE TESTING
+- An 'undo' hotkey that knows how much to backspace
+- on-screen controls to change model settings for weird mode and normal mode without editing app.py
+- provide a hotkey to return to generator mode
+- choose next comparison non-randomly
+- extend review out of solitaire mode and into network mode--raises implementation questions--git annex is one style of solution, modern blockchains are another, gossip algorithms, etc.
+- develop test cases
